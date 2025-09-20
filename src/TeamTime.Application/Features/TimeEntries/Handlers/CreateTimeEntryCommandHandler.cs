@@ -2,6 +2,7 @@ using TeamTime.Application.Common;
 using TeamTime.Application.DTOs;
 using TeamTime.Application.Features.TimeEntries.Commands;
 using TeamTime.Application.Mappings;
+using TeamTime.Application.Services;
 using TeamTime.Application.Validators;
 using TeamTime.Common.Results;
 using TeamTime.Domain.Entities;
@@ -14,15 +15,18 @@ public class CreateTimeEntryCommandHandler : ICommandHandler<CreateTimeEntryComm
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper<TimeEntry, TimeEntryDto> _mapper;
     private readonly IValidator<CreateTimeEntryCommand> _validator;
+    private readonly ITimeEntryValidationService _validationService;
 
     public CreateTimeEntryCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper<TimeEntry, TimeEntryDto> mapper,
-        IValidator<CreateTimeEntryCommand> validator)
+        IValidator<CreateTimeEntryCommand> validator,
+        ITimeEntryValidationService validationService)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+        _validationService = validationService ?? throw new ArgumentNullException(nameof(validationService));
     }
 
     public async Task<Result<TimeEntryDto>> HandleAsync(CreateTimeEntryCommand command, CancellationToken cancellationToken = default)
@@ -37,10 +41,28 @@ public class CreateTimeEntryCommandHandler : ICommandHandler<CreateTimeEntryComm
 
         try
         {
-            // Create time entry entity
+            // Validate time entry and get appropriate time period
+            var validation = await _validationService.ValidateTimeEntryAsync(
+                command.UserId,
+                command.ProjectId,
+                command.Date,
+                command.Hours);
+
+            if (!validation.IsValid)
+            {
+                return Result<TimeEntryDto>.Failure(validation.Errors.ToArray());
+            }
+
+            if (validation.SuggestedTimePeriod == null)
+            {
+                return Result<TimeEntryDto>.Failure("No valid time period found for the specified date");
+            }
+
+            // Create time entry entity with the validated time period
             var timeEntry = new TimeEntry(
                 command.UserId,
                 command.ProjectId,
+                validation.SuggestedTimePeriod.Id,
                 command.Date,
                 command.Hours,
                 command.Description,

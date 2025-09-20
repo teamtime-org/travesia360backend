@@ -71,7 +71,6 @@ public class ProjectRepository : Repository<Project>, IProjectRepository
         return await _dbSet
             .Include(p => p.Area)
             .Include(p => p.TimeEntries)
-                .ThenInclude(te => te.User)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 

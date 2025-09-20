@@ -15,20 +15,20 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
     public override async Task<TimeEntry?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .FirstOrDefaultAsync(te => te.Id == id, cancellationToken);
     }
 
     public override async Task<IEnumerable<TimeEntry>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => te.IsActive)
             .ToListAsync(cancellationToken);
     }
@@ -36,10 +36,10 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
     public async Task<IEnumerable<TimeEntry>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => te.UserId == userId && te.IsActive)
             .OrderByDescending(te => te.Date)
             .ThenByDescending(te => te.CreatedAt)
@@ -49,10 +49,10 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
     public async Task<IEnumerable<TimeEntry>> GetByProjectIdAsync(Guid projectId, CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => te.ProjectId == projectId && te.IsActive)
             .OrderByDescending(te => te.Date)
             .ThenByDescending(te => te.CreatedAt)
@@ -62,10 +62,10 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
     public async Task<IEnumerable<TimeEntry>> GetByDateRangeAsync(DateOnly startDate, DateOnly endDate, CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => te.Date >= startDate && te.Date <= endDate && te.IsActive)
             .OrderByDescending(te => te.Date)
             .ThenByDescending(te => te.CreatedAt)
@@ -75,10 +75,10 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
     public async Task<IEnumerable<TimeEntry>> GetByUserAndDateRangeAsync(Guid userId, DateOnly startDate, DateOnly endDate, CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => te.UserId == userId && te.Date >= startDate && te.Date <= endDate && te.IsActive)
             .OrderByDescending(te => te.Date)
             .ThenByDescending(te => te.CreatedAt)
@@ -88,10 +88,10 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
     public async Task<IEnumerable<TimeEntry>> GetByProjectAndDateRangeAsync(Guid projectId, DateOnly startDate, DateOnly endDate, CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => te.ProjectId == projectId && te.Date >= startDate && te.Date <= endDate && te.IsActive)
             .OrderByDescending(te => te.Date)
             .ThenByDescending(te => te.CreatedAt)
@@ -101,10 +101,10 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
     public async Task<IEnumerable<TimeEntry>> GetPendingApprovalsAsync(CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => !te.IsApproved && te.IsActive)
             .OrderByDescending(te => te.Date)
             .ThenByDescending(te => te.CreatedAt)
@@ -114,10 +114,10 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
     public async Task<IEnumerable<TimeEntry>> GetApprovedEntriesAsync(CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => te.IsApproved && te.IsActive)
             .OrderByDescending(te => te.Date)
             .ThenByDescending(te => te.CreatedAt)
@@ -156,10 +156,10 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
         CancellationToken cancellationToken = default)
     {
         var query = _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => te.IsActive)
             .AsQueryable();
 
@@ -211,10 +211,10 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
         CancellationToken cancellationToken = default)
     {
         var query = _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => te.UserId == userId && te.IsActive)
             .AsQueryable();
 
@@ -256,10 +256,10 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
         CancellationToken cancellationToken = default)
     {
         var query = _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => te.ProjectId == projectId && te.IsActive)
             .AsQueryable();
 
@@ -300,10 +300,10 @@ public class TimeEntryRepository : Repository<TimeEntry>, ITimeEntryRepository
         CancellationToken cancellationToken = default)
     {
         var query = _dbSet
-            .Include(te => te.User)
+            
             .Include(te => te.Project)
             .Include(te => te.Task)
-            .Include(te => te.ApprovedBy)
+            
             .Where(te => !te.IsApproved && te.IsActive)
             .AsQueryable();
 

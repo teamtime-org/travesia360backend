@@ -19,6 +19,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ProjectAssignment> ProjectAssignments => Set<ProjectAssignment>();
     public DbSet<TeamTimeTask> Tasks => Set<TeamTimeTask>();
     public DbSet<TimeEntry> TimeEntries => Set<TimeEntry>();
+    public DbSet<TimePeriod> TimePeriods => Set<TimePeriod>();
     public DbSet<JobTitle> JobTitles => Set<JobTitle>();
 
     // Identity entities are inherited from IdentityDbContext

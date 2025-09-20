@@ -27,6 +27,10 @@ public class TimeEntryConfiguration : IEntityTypeConfiguration<TimeEntry>
         builder.Property(te => te.TaskId)
             .HasColumnName("task_id");
 
+        builder.Property(te => te.TimePeriodId)
+            .IsRequired()
+            .HasColumnName("time_period_id");
+
         builder.Property(te => te.Date)
             .IsRequired()
             .HasColumnName("date");
@@ -72,16 +76,19 @@ public class TimeEntryConfiguration : IEntityTypeConfiguration<TimeEntry>
 
         // Indexes
         builder.HasIndex(te => new { te.UserId, te.Date })
-            .HasDatabaseName("IX_time_entries_user_date");
+            .HasDatabaseName("ix_time_entries_user_date");
 
         builder.HasIndex(te => new { te.ProjectId, te.Date })
-            .HasDatabaseName("IX_time_entries_project_date");
+            .HasDatabaseName("ix_time_entries_project_date");
+
+        builder.HasIndex(te => te.TimePeriodId)
+            .HasDatabaseName("ix_time_entries_time_period_id");
+
+        builder.HasIndex(te => new { te.TimePeriodId, te.Date })
+            .HasDatabaseName("ix_time_entries_time_period_date");
 
         // Relationships
-        builder.HasOne(te => te.User)
-            .WithMany(u => u.TimeEntries)
-            .HasForeignKey(te => te.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+        // Note: UserId references ApplicationUser (Identity), not Domain User entity
 
         builder.HasOne(te => te.Project)
             .WithMany(p => p.TimeEntries)
@@ -91,11 +98,15 @@ public class TimeEntryConfiguration : IEntityTypeConfiguration<TimeEntry>
         builder.HasOne(te => te.Task)
             .WithMany(t => t.TimeEntries)
             .HasForeignKey(te => te.TaskId)
+            .HasConstraintName("fk_time_entries_tasks_task_id")
             .OnDelete(DeleteBehavior.SetNull);
 
-        builder.HasOne(te => te.ApprovedBy)
-            .WithMany(u => u.ApprovedTimeEntries)
-            .HasForeignKey(te => te.ApprovedById)
-            .OnDelete(DeleteBehavior.SetNull);
+        builder.HasOne(te => te.TimePeriod)
+            .WithMany(tp => tp.TimeEntries)
+            .HasForeignKey(te => te.TimePeriodId)
+            .HasConstraintName("fk_time_entries_time_periods_time_period_id")
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Note: ApprovedById references ApplicationUser (Identity), not Domain User entity
     }
 }

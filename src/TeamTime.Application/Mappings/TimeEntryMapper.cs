@@ -14,7 +14,7 @@ public class TimeEntryMapper : IMapper<TimeEntry, TimeEntryDto>
         {
             Id = source.Id,
             UserId = source.UserId,
-            UserFullName = source.User?.FullName ?? string.Empty,
+            UserFullName = string.Empty, // TODO: Load from ApplicationUser if needed
             ProjectId = source.ProjectId,
             ProjectName = source.Project?.Name ?? string.Empty,
             TaskId = source.TaskId,
@@ -24,7 +24,7 @@ public class TimeEntryMapper : IMapper<TimeEntry, TimeEntryDto>
             Description = source.Description,
             IsApproved = source.IsApproved,
             ApprovedById = source.ApprovedById,
-            ApprovedByName = source.ApprovedBy?.FullName,
+            ApprovedByName = null, // TODO: Load from ApplicationUser if needed
             ApprovedAt = source.ApprovedAt,
             IsActive = source.IsActive,
             CreatedAt = source.CreatedAt,

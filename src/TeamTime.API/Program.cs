@@ -86,12 +86,19 @@ builder.Services.AddScoped<IMapper<Area, AreaDto>, AreaMapper>();
 builder.Services.AddScoped<IMapper<Project, ProjectDto>, ProjectMapper>();
 builder.Services.AddScoped<IMapper<TeamTimeTask, TaskDto>, TaskMapper>();
 builder.Services.AddScoped<IMapper<TimeEntry, TimeEntryDto>, TimeEntryMapper>();
+builder.Services.AddScoped<IMapper<TimePeriod, TimePeriodDto>, TimePeriodMapper>();
 
 // Token Service
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 // Identity Service
 builder.Services.AddScoped<IIdentityService, IdentityService>();
+
+// Time Period Service
+builder.Services.AddScoped<ITimePeriodService, TimePeriodService>();
+
+// Time Entry Validation Service
+builder.Services.AddScoped<ITimeEntryValidationService, TimeEntryValidationService>();
 
 // Auto-register all command handlers
 builder.Services.Scan(scan => scan
