@@ -12,6 +12,9 @@ using TeamTime.Application.Mappings;
 using TeamTime.Application.DTOs;
 using TeamTime.Domain.Entities;
 using TeamTime.Application.Common;
+using TeamTime.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using TeamTime.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +27,34 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("TeamTime.Infrastructure")));
+
+// Identity
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+{
+    // Password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequiredUniqueChars = 1;
+
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    // User settings
+    options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = true;
+
+    // Sign in settings
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
 // CORS
 builder.Services.AddCors(options =>
@@ -59,6 +90,9 @@ builder.Services.AddScoped<IMapper<TimeEntry, TimeEntryDto>, TimeEntryMapper>();
 // Token Service
 builder.Services.AddScoped<ITokenService, TokenService>();
 
+// Identity Service
+builder.Services.AddScoped<IIdentityService, IdentityService>();
+
 // Auto-register all command handlers
 builder.Services.Scan(scan => scan
     .FromAssembliesOf(typeof(ICommandHandler<,>))
@@ -80,7 +114,7 @@ builder.Services.Scan(scan => scan
     .AsImplementedInterfaces()
     .WithScopedLifetime());
 
-// Authentication
+// Authentication with JWT (overriding Identity default)
 var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "YourSuperSecretKeyThatIsAtLeast32CharactersLong!TeamTime2024";
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "TeamTime";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "TeamTime";
@@ -89,6 +123,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
@@ -130,5 +165,30 @@ app.MapGet("/api/health", () => new
     Service = "TeamTime API",
     Version = "1.0.0"
 });
+
+// Seed database
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
+
+        await SeedData.SeedAsync(context, userManager, roleManager);
+
+        // Seed development data only in development environment
+        if (app.Environment.IsDevelopment())
+        {
+            await SeedData.SeedDevelopmentDataAsync(context, userManager);
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred seeding the database.");
+    }
+}
 
 app.Run();

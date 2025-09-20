@@ -1,25 +1,39 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TeamTime.Domain.Common;
 using TeamTime.Domain.Entities;
 using TeamTime.Infrastructure.Data.Extensions;
+using TeamTime.Infrastructure.Identity;
 
 namespace TeamTime.Infrastructure.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
 
-    public DbSet<User> Users => Set<User>();
+    // Domain entities
     public DbSet<Area> Areas => Set<Area>();
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<ProjectAssignment> ProjectAssignments => Set<ProjectAssignment>();
     public DbSet<TeamTimeTask> Tasks => Set<TeamTimeTask>();
     public DbSet<TimeEntry> TimeEntries => Set<TimeEntry>();
+    public DbSet<JobTitle> JobTitles => Set<JobTitle>();
+
+    // Identity entities are inherited from IdentityDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Configure Identity table names
+        modelBuilder.Entity<ApplicationUser>().ToTable("users");
+        modelBuilder.Entity<ApplicationRole>().ToTable("roles");
+        modelBuilder.Entity<Microsoft.AspNetCore.Identity.IdentityUserRole<Guid>>().ToTable("user_roles");
+        modelBuilder.Entity<Microsoft.AspNetCore.Identity.IdentityUserClaim<Guid>>().ToTable("user_claims");
+        modelBuilder.Entity<Microsoft.AspNetCore.Identity.IdentityUserLogin<Guid>>().ToTable("user_logins");
+        modelBuilder.Entity<Microsoft.AspNetCore.Identity.IdentityUserToken<Guid>>().ToTable("user_tokens");
+        modelBuilder.Entity<Microsoft.AspNetCore.Identity.IdentityRoleClaim<Guid>>().ToTable("role_claims");
+
         // Apply entity configurations
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 

@@ -19,10 +19,31 @@ public class UserMapper : IMapper<User, UserDto>
             FullName = source.FullName,
             Role = source.Role,
             AreaId = source.AreaId,
-            AreaName = source.Area?.Name,
+            JobTitleId = source.JobTitleId,
+            EmployeeCode = source.EmployeeCode,
+            PhoneNumber = source.PhoneNumber,
+            DateOfJoining = source.DateOfJoining,
             IsActive = source.IsActive,
+            EmailConfirmed = source.EmailConfirmed,
             CreatedAt = source.CreatedAt,
-            UpdatedAt = source.UpdatedAt
+            UpdatedAt = source.UpdatedAt,
+            Area = source.Area != null ? new AreaDto
+            {
+                Id = source.Area.Id,
+                Name = source.Area.Name,
+                Description = source.Area.Description,
+                Color = source.Area.Color,
+                IsActive = source.Area.IsActive
+            } : null,
+            JobTitle = source.JobTitle != null ? new JobTitleDto
+            {
+                Id = source.JobTitle.Id,
+                Name = source.JobTitle.Name,
+                Description = source.JobTitle.Description,
+                Department = source.JobTitle.Department,
+                Level = source.JobTitle.Level,
+                IsActive = source.JobTitle.IsActive
+            } : null
         };
     }
 

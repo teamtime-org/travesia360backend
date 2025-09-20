@@ -22,6 +22,129 @@ namespace TeamTime.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text")
+                        .HasColumnName("claim_type");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text")
+                        .HasColumnName("claim_value");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_role_claims");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text")
+                        .HasColumnName("claim_type");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text")
+                        .HasColumnName("claim_value");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_user_claims");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text")
+                        .HasColumnName("login_provider");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("text")
+                        .HasColumnName("provider_key");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("text")
+                        .HasColumnName("provider_display_name");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text")
+                        .HasColumnName("login_provider");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text")
+                        .HasColumnName("value");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
             modelBuilder.Entity("TeamTime.Domain.Entities.Area", b =>
                 {
                     b.Property<Guid>("Id")
@@ -77,6 +200,66 @@ namespace TeamTime.Infrastructure.Migrations
                         .HasDatabaseName("ix_areas_name");
 
                     b.ToTable("areas", (string)null);
+                });
+
+            modelBuilder.Entity("TeamTime.Domain.Entities.JobTitle", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("department");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<Guid?>("LastModifiedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("integer")
+                        .HasColumnName("level");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_job_titles");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_job_titles_name");
+
+                    b.ToTable("job_titles", (string)null);
                 });
 
             modelBuilder.Entity("TeamTime.Domain.Entities.Project", b =>
@@ -154,6 +337,10 @@ namespace TeamTime.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
                     b.HasKey("Id")
                         .HasName("pk_projects");
 
@@ -162,6 +349,9 @@ namespace TeamTime.Infrastructure.Migrations
 
                     b.HasIndex("CreatedBy")
                         .HasDatabaseName("ix_projects_created_by");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_projects_user_id");
 
                     b.ToTable("projects", (string)null);
                 });
@@ -292,6 +482,10 @@ namespace TeamTime.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
                     b.HasKey("Id")
                         .HasName("pk_tasks");
 
@@ -300,6 +494,9 @@ namespace TeamTime.Infrastructure.Migrations
 
                     b.HasIndex("ProjectId")
                         .HasDatabaseName("ix_tasks_project_id");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_tasks_user_id");
 
                     b.ToTable("tasks", (string)null);
                 });
@@ -392,8 +589,13 @@ namespace TeamTime.Infrastructure.Migrations
             modelBuilder.Entity("TeamTime.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("access_failed_count");
 
                     b.Property<Guid?>("AreaId")
                         .HasColumnType("uuid")
@@ -407,11 +609,179 @@ namespace TeamTime.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("created_by");
 
+                    b.Property<DateTime?>("DateOfJoining")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date_of_joining");
+
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
+                        .HasColumnType("text")
                         .HasColumnName("email");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("email_confirmed");
+
+                    b.Property<string>("EmployeeCode")
+                        .HasColumnType("text")
+                        .HasColumnName("employee_code");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("first_name");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<Guid?>("JobTitleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("job_title_id");
+
+                    b.Property<Guid?>("LastModifiedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("last_name");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("lockout_enabled");
+
+                    b.Property<DateTime?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("lockout_end");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("password_hash");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("phone_number");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer")
+                        .HasColumnName("role");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_user");
+
+                    b.HasIndex("AreaId")
+                        .HasDatabaseName("ix_user_area_id");
+
+                    b.HasIndex("JobTitleId")
+                        .HasDatabaseName("ix_user_job_title_id");
+
+                    b.ToTable("user");
+                });
+
+            modelBuilder.Entity("TeamTime.Infrastructure.Identity.ApplicationRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text")
+                        .HasColumnName("concurrency_stamp");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("normalized_name");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_roles");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("TeamTime.Infrastructure.Identity.ApplicationUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("access_failed_count");
+
+                    b.Property<Guid?>("AreaId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("area_id");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text")
+                        .HasColumnName("concurrency_stamp");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime?>("DateOfJoining")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date_of_joining");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("email");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("email_confirmed");
+
+                    b.Property<string>("EmployeeCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("employee_code");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -425,6 +795,10 @@ namespace TeamTime.Infrastructure.Migrations
                         .HasDefaultValue(true)
                         .HasColumnName("is_active");
 
+                    b.Property<Guid?>("JobTitleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("job_title_id");
+
                     b.Property<Guid?>("LastModifiedBy")
                         .HasColumnType("uuid")
                         .HasColumnName("last_modified_by");
@@ -435,20 +809,57 @@ namespace TeamTime.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("last_name");
 
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("lockout_enabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("lockout_end");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("normalized_email");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("normalized_user_name");
+
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
+                        .HasColumnType("text")
                         .HasColumnName("password_hash");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("phone_number");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("phone_number_confirmed");
 
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("role");
 
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text")
+                        .HasColumnName("security_stamp");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("two_factor_enabled");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("user_name");
 
                     b.HasKey("Id")
                         .HasName("pk_users");
@@ -456,11 +867,68 @@ namespace TeamTime.Infrastructure.Migrations
                     b.HasIndex("AreaId")
                         .HasDatabaseName("ix_users_area_id");
 
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasDatabaseName("ix_users_email");
+                    b.HasIndex("JobTitleId")
+                        .HasDatabaseName("ix_users_job_title_id");
 
-                    b.ToTable("users", (string)null);
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.HasOne("TeamTime.Infrastructure.Identity.ApplicationRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.HasOne("TeamTime.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.HasOne("TeamTime.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.HasOne("TeamTime.Infrastructure.Identity.ApplicationRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TeamTime.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.HasOne("TeamTime.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TeamTime.Domain.Entities.Project", b =>
@@ -472,11 +940,16 @@ namespace TeamTime.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_projects_areas_area_id");
 
-                    b.HasOne("TeamTime.Domain.Entities.User", null)
+                    b.HasOne("TeamTime.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany("CreatedProjects")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_projects_users_created_by");
+
+                    b.HasOne("TeamTime.Domain.Entities.User", null)
+                        .WithMany("CreatedProjects")
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("fk_projects_user_user_id");
 
                     b.Navigation("Area");
                 });
@@ -488,7 +961,7 @@ namespace TeamTime.Infrastructure.Migrations
                         .HasForeignKey("AssignedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_project_assignments_users_assigned_by_id");
+                        .HasConstraintName("fk_project_assignments_user_assigned_by_id");
 
                     b.HasOne("TeamTime.Domain.Entities.Project", "Project")
                         .WithMany("Assignments")
@@ -498,6 +971,13 @@ namespace TeamTime.Infrastructure.Migrations
                         .HasConstraintName("fk_project_assignments_projects_project_id");
 
                     b.HasOne("TeamTime.Domain.Entities.User", "User")
+                        .WithMany("ProjectAssignments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_project_assignments_user_user_id");
+
+                    b.HasOne("TeamTime.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany("ProjectAssignments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -513,7 +993,7 @@ namespace TeamTime.Infrastructure.Migrations
 
             modelBuilder.Entity("TeamTime.Domain.Entities.TeamTimeTask", b =>
                 {
-                    b.HasOne("TeamTime.Domain.Entities.User", null)
+                    b.HasOne("TeamTime.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany("CreatedTasks")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -526,12 +1006,23 @@ namespace TeamTime.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_tasks_projects_project_id");
 
+                    b.HasOne("TeamTime.Domain.Entities.User", null)
+                        .WithMany("CreatedTasks")
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("fk_tasks_user_user_id");
+
                     b.Navigation("Project");
                 });
 
             modelBuilder.Entity("TeamTime.Domain.Entities.TimeEntry", b =>
                 {
                     b.HasOne("TeamTime.Domain.Entities.User", "ApprovedBy")
+                        .WithMany("ApprovedTimeEntries")
+                        .HasForeignKey("ApprovedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_time_entries_user_approved_by_id");
+
+                    b.HasOne("TeamTime.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany("ApprovedTimeEntries")
                         .HasForeignKey("ApprovedById")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -555,6 +1046,13 @@ namespace TeamTime.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
+                        .HasConstraintName("fk_time_entries_user_user_id");
+
+                    b.HasOne("TeamTime.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany("TimeEntries")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_time_entries_users_user_id");
 
                     b.Navigation("ApprovedBy");
@@ -572,15 +1070,47 @@ namespace TeamTime.Infrastructure.Migrations
                         .WithMany("Users")
                         .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_users_areas_area_id");
+                        .HasConstraintName("fk_user_areas_area_id");
+
+                    b.HasOne("TeamTime.Domain.Entities.JobTitle", "JobTitle")
+                        .WithMany("Users")
+                        .HasForeignKey("JobTitleId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_user_job_titles_job_title_id");
 
                     b.Navigation("Area");
+
+                    b.Navigation("JobTitle");
+                });
+
+            modelBuilder.Entity("TeamTime.Infrastructure.Identity.ApplicationUser", b =>
+                {
+                    b.HasOne("TeamTime.Domain.Entities.Area", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_users_areas_area_id");
+
+                    b.HasOne("TeamTime.Domain.Entities.JobTitle", "JobTitle")
+                        .WithMany()
+                        .HasForeignKey("JobTitleId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_users_job_titles_job_title_id");
+
+                    b.Navigation("Area");
+
+                    b.Navigation("JobTitle");
                 });
 
             modelBuilder.Entity("TeamTime.Domain.Entities.Area", b =>
                 {
                     b.Navigation("Projects");
 
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("TeamTime.Domain.Entities.JobTitle", b =>
+                {
                     b.Navigation("Users");
                 });
 
@@ -599,6 +1129,19 @@ namespace TeamTime.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("TeamTime.Domain.Entities.User", b =>
+                {
+                    b.Navigation("ApprovedTimeEntries");
+
+                    b.Navigation("CreatedProjects");
+
+                    b.Navigation("CreatedTasks");
+
+                    b.Navigation("ProjectAssignments");
+
+                    b.Navigation("TimeEntries");
+                });
+
+            modelBuilder.Entity("TeamTime.Infrastructure.Identity.ApplicationUser", b =>
                 {
                     b.Navigation("ApprovedTimeEntries");
 
