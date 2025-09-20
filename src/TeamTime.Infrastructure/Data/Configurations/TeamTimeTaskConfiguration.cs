@@ -13,14 +13,17 @@ public class TeamTimeTaskConfiguration : IEntityTypeConfiguration<TeamTimeTask>
         builder.HasKey(t => t.Id);
 
         builder.Property(t => t.Id)
-            .ValueGeneratedNever();
+            .ValueGeneratedNever()
+            .HasColumnName("id");
 
         builder.Property(t => t.Name)
             .IsRequired()
-            .HasMaxLength(200);
+            .HasMaxLength(200)
+            .HasColumnName("name");
 
         builder.Property(t => t.Description)
-            .HasMaxLength(1000);
+            .HasMaxLength(1000)
+            .HasColumnName("description");
 
         builder.Property(t => t.ProjectId)
             .IsRequired()
@@ -29,12 +32,14 @@ public class TeamTimeTaskConfiguration : IEntityTypeConfiguration<TeamTimeTask>
         builder.Property(t => t.Status)
             .IsRequired()
             .HasConversion<string>()
-            .HasDefaultValue(Domain.Enums.TaskStatus.TODO);
+            .HasDefaultValue(Domain.Enums.TaskStatus.TODO)
+            .HasColumnName("status");
 
         builder.Property(t => t.Priority)
             .IsRequired()
             .HasConversion<string>()
-            .HasDefaultValue(Domain.Enums.Priority.MEDIUM);
+            .HasDefaultValue(Domain.Enums.Priority.MEDIUM)
+            .HasColumnName("priority");
 
         builder.Property(t => t.DueDate)
             .HasColumnName("due_date");

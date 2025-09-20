@@ -14,18 +14,21 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(u => u.Id);
 
         builder.Property(u => u.Id)
-            .ValueGeneratedNever();
+            .ValueGeneratedNever()
+            .HasColumnName("id");
 
         builder.Property(u => u.Email)
             .IsRequired()
-            .HasMaxLength(255);
+            .HasMaxLength(255)
+            .HasColumnName("email");
 
         builder.HasIndex(u => u.Email)
             .IsUnique();
 
         builder.Property(u => u.PasswordHash)
             .IsRequired()
-            .HasMaxLength(255);
+            .HasMaxLength(255)
+            .HasColumnName("password_hash");
 
         builder.Property(u => u.FirstName)
             .IsRequired()
@@ -39,7 +42,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Role)
             .IsRequired()
-            .HasConversion<string>();
+            .HasConversion<string>()
+            .HasColumnName("role");
 
         builder.Property(u => u.AreaId)
             .HasColumnName("area_id");

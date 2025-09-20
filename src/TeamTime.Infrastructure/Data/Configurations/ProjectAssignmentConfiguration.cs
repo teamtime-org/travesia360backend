@@ -13,7 +13,8 @@ public class ProjectAssignmentConfiguration : IEntityTypeConfiguration<ProjectAs
         builder.HasKey(pa => pa.Id);
 
         builder.Property(pa => pa.Id)
-            .ValueGeneratedNever();
+            .ValueGeneratedNever()
+            .HasColumnName("id");
 
         builder.Property(pa => pa.ProjectId)
             .IsRequired()

@@ -13,14 +13,17 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.HasKey(p => p.Id);
 
         builder.Property(p => p.Id)
-            .ValueGeneratedNever();
+            .ValueGeneratedNever()
+            .HasColumnName("id");
 
         builder.Property(p => p.Name)
             .IsRequired()
-            .HasMaxLength(200);
+            .HasMaxLength(200)
+            .HasColumnName("name");
 
         builder.Property(p => p.Description)
-            .HasMaxLength(1000);
+            .HasMaxLength(1000)
+            .HasColumnName("description");
 
         builder.Property(p => p.AreaId)
             .IsRequired()
@@ -29,12 +32,14 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.Property(p => p.Status)
             .IsRequired()
             .HasConversion<string>()
-            .HasDefaultValue(Domain.Enums.ProjectStatus.ACTIVE);
+            .HasDefaultValue(Domain.Enums.ProjectStatus.ACTIVE)
+            .HasColumnName("status");
 
         builder.Property(p => p.Priority)
             .IsRequired()
             .HasConversion<string>()
-            .HasDefaultValue(Domain.Enums.Priority.MEDIUM);
+            .HasDefaultValue(Domain.Enums.Priority.MEDIUM)
+            .HasColumnName("priority");
 
         builder.Property(p => p.StartDate)
             .HasColumnName("start_date");

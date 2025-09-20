@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TeamTime.Domain.Common;
 using TeamTime.Domain.Entities;
+using TeamTime.Infrastructure.Data.Extensions;
 
 namespace TeamTime.Infrastructure.Data;
 
@@ -19,7 +20,12 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Apply entity configurations
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+        // Apply snake_case naming convention to all entities
+        modelBuilder.ApplySnakeCaseNamingConvention();
+
         base.OnModelCreating(modelBuilder);
     }
 

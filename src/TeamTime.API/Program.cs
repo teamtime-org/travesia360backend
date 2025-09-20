@@ -15,9 +15,6 @@ using TeamTime.Application.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add configuration sources for local development
-builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
-
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

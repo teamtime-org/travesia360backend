@@ -13,7 +13,8 @@ public class TimeEntryConfiguration : IEntityTypeConfiguration<TimeEntry>
         builder.HasKey(te => te.Id);
 
         builder.Property(te => te.Id)
-            .ValueGeneratedNever();
+            .ValueGeneratedNever()
+            .HasColumnName("id");
 
         builder.Property(te => te.UserId)
             .IsRequired()
@@ -27,14 +28,17 @@ public class TimeEntryConfiguration : IEntityTypeConfiguration<TimeEntry>
             .HasColumnName("task_id");
 
         builder.Property(te => te.Date)
-            .IsRequired();
+            .IsRequired()
+            .HasColumnName("date");
 
         builder.Property(te => te.Hours)
             .IsRequired()
-            .HasColumnType("decimal(4,2)");
+            .HasColumnType("decimal(4,2)")
+            .HasColumnName("hours");
 
         builder.Property(te => te.Description)
-            .HasMaxLength(1000);
+            .HasMaxLength(1000)
+            .HasColumnName("description");
 
         builder.Property(te => te.IsApproved)
             .IsRequired()

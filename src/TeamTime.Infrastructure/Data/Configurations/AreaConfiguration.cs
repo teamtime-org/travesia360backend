@@ -13,22 +13,26 @@ public class AreaConfiguration : IEntityTypeConfiguration<Area>
         builder.HasKey(a => a.Id);
 
         builder.Property(a => a.Id)
-            .ValueGeneratedNever();
+            .ValueGeneratedNever()
+            .HasColumnName("id");
 
         builder.Property(a => a.Name)
             .IsRequired()
-            .HasMaxLength(200);
+            .HasMaxLength(200)
+            .HasColumnName("name");
 
         builder.HasIndex(a => a.Name)
             .IsUnique();
 
         builder.Property(a => a.Description)
-            .HasMaxLength(1000);
+            .HasMaxLength(1000)
+            .HasColumnName("description");
 
         builder.Property(a => a.Color)
             .IsRequired()
             .HasMaxLength(7)
-            .HasDefaultValue("#2563EB");
+            .HasDefaultValue("#2563EB")
+            .HasColumnName("color");
 
         builder.Property(a => a.IsActive)
             .IsRequired()
