@@ -54,6 +54,7 @@ public class AssignUserToProjectCommandHandler : ICommandHandler<AssignUserToPro
             }
 
             // Check if user is already assigned to the project
+            // Check if user is already assigned to the project
             var existingAssignment = project.Assignments.FirstOrDefault(a => a.UserId == command.UserId);
             if (existingAssignment != null)
             {

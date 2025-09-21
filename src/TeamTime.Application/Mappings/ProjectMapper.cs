@@ -15,7 +15,7 @@ public class ProjectMapper : IMapper<Project, ProjectDto>
             Id = source.Id,
             Name = source.Name,
             Description = source.Description,
-            AreaId = source.AreaId,
+            AreaId = source.AreaId ?? Guid.Empty,
             AreaName = source.Area?.Name ?? string.Empty,
             Status = source.Status,
             Priority = source.Priority,

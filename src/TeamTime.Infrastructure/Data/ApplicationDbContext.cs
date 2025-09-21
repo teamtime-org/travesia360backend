@@ -22,6 +22,24 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<TimePeriod> TimePeriods => Set<TimePeriod>();
     public DbSet<JobTitle> JobTitles => Set<JobTitle>();
 
+    // Import System Entities
+    // Catalogs
+    public DbSet<Segment> Segments => Set<Segment>();
+    public DbSet<ProjectStage> ProjectStages => Set<ProjectStage>();
+    public DbSet<ServiceType> ServiceTypes => Set<ServiceType>();
+    public DbSet<ContractType> ContractTypes => Set<ContractType>();
+    public DbSet<BusinessLine> BusinessLines => Set<BusinessLine>();
+    public DbSet<RiskLevel> RiskLevels => Set<RiskLevel>();
+    public DbSet<RiskType> RiskTypes => Set<RiskType>();
+    public DbSet<ProjectRole> ProjectRoles => Set<ProjectRole>();
+
+    // Main Entities
+    public DbSet<Client> Clients => Set<Client>();
+
+    // Relational Entities
+    public DbSet<ProjectRisk> ProjectRisks => Set<ProjectRisk>();
+    public DbSet<ProjectStageHistory> ProjectStageHistory => Set<ProjectStageHistory>();
+
     // Identity entities are inherited from IdentityDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

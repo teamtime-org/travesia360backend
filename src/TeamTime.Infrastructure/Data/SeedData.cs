@@ -22,6 +22,9 @@ public static class SeedData
         // Seed Areas
         await SeedAreasAsync(context);
 
+        // Seed Unified Catalog Entities
+        await SeedUnifiedCatalogsAsync(context);
+
         // Seed Admin User
         await SeedAdminUserAsync(userManager, context);
 
@@ -173,5 +176,87 @@ public static class SeedData
                 }
             }
         }
+    }
+
+    private static async Task SeedUnifiedCatalogsAsync(ApplicationDbContext context)
+    {
+        // Seed Project Stages
+        if (!await context.ProjectStages.AnyAsync())
+        {
+            var stages = new[]
+            {
+                ProjectStage.Stages.CreateAdjudicado(),
+                ProjectStage.Stages.CreateEnProceso(),
+                ProjectStage.Stages.CreatePerdido(),
+                ProjectStage.Stages.CreateDesierto(),
+                ProjectStage.Stages.CreateSinParticipacion(),
+                ProjectStage.Stages.CreateCanceladoDiseño(),
+                ProjectStage.Stages.CreateDetenido(),
+                ProjectStage.Stages.CreateEjecucion(),
+                ProjectStage.Stages.CreateCompletado(),
+                ProjectStage.Stages.CreateGanada(),
+                ProjectStage.Stages.CreatePerdida(),
+                ProjectStage.Stages.CreateEntregado(),
+                ProjectStage.Stages.CreateCanceladoCierre()
+            };
+
+            await context.ProjectStages.AddRangeAsync(stages);
+        }
+
+        // Seed Contract Types
+        if (!await context.ContractTypes.AnyAsync())
+        {
+            var contractTypes = new[]
+            {
+                ContractType.CreateLicitacion(),
+                ContractType.CreateBAU(),
+                ContractType.CreateCotizacion(),
+                ContractType.CreateAdjudicacionDirecta(),
+                ContractType.CreateEstudioMercado(),
+                ContractType.CreateOperacionActual(),
+                ContractType.CreatePrebases(),
+                ContractType.CreateAnalisis(),
+                ContractType.CreateApoyoTecnico(),
+                ContractType.CreateInvitacionTres()
+            };
+
+            await context.ContractTypes.AddRangeAsync(contractTypes);
+        }
+
+        // Seed Risk Levels
+        if (!await context.RiskLevels.AnyAsync())
+        {
+            var riskLevels = new[]
+            {
+                RiskLevel.CreateBajo(),
+                RiskLevel.CreateMedio(),
+                RiskLevel.CreateAlto()
+            };
+
+            await context.RiskLevels.AddRangeAsync(riskLevels);
+        }
+
+        // Seed Project Roles
+        if (!await context.ProjectRoles.AnyAsync())
+        {
+            var projectRoles = new[]
+            {
+                ProjectRole.CreateArquitecto(),
+                ProjectRole.CreateGerenteVentas(),
+                ProjectRole.CreateLiderVentas(),
+                ProjectRole.CreateEjecutivoVentas(),
+                ProjectRole.CreateGerenteDS(),
+                ProjectRole.CreateCoordinadorDS(),
+                ProjectRole.CreateGerenteLicitaciones(),
+                ProjectRole.CreateEjecutivoLicitaciones(),
+                ProjectRole.CreateMentor(),
+                ProjectRole.CreateCoordinador(),
+                ProjectRole.CreateDiseñador()
+            };
+
+            await context.ProjectRoles.AddRangeAsync(projectRoles);
+        }
+
+        await context.SaveChangesAsync();
     }
 }

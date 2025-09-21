@@ -69,12 +69,12 @@ public class GetTimeDistributionQueryHandler : IQueryHandler<GetTimeDistribution
                     .GroupBy(te => te.Project.AreaId)
                     .Select(g => new TimeDistributionDto
                     {
-                        Id = g.Key,
+                        Id = g.Key ?? Guid.Empty,
                         Name = g.First().Project?.Area?.Name ?? "Unknown Area",
                         Type = "Area",
                         Hours = g.Sum(te => te.Hours),
                         Percentage = (g.Sum(te => te.Hours) / totalHours) * 100,
-                        Color = GenerateColor(g.Key),
+                        Color = GenerateColor(g.Key ?? Guid.Empty),
                         SubItems = new List<TimeDistributionDto>()
                     })
                     .OrderByDescending(a => a.Hours)

@@ -40,12 +40,14 @@ public class RemoveUserFromProjectCommandHandler : ICommandHandler<RemoveUserFro
             }
 
             // Find active assignment
+            // Find active assignment
             var assignment = project.Assignments.FirstOrDefault(a => a.UserId == command.UserId && a.IsActive);
             if (assignment == null)
             {
                 return Result<Unit>.Failure("User is not assigned to this project");
             }
 
+            // Deactivate assignment instead of hard delete to maintain history
             // Deactivate assignment instead of hard delete to maintain history
             assignment.Deactivate();
             assignment.LastModifiedBy = command.RemovedById;
